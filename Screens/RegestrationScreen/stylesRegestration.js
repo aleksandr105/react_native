@@ -1,0 +1,93 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 92,
+    paddingBottom: 45,
+    paddingHorizontal: 16,
+    position: "relative",
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+    position: "relative",
+  },
+  addAvatar: {
+    width: 25,
+    height: 25,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
+    backgroundColor: "#FFFFFF",
+    position: "absolute",
+    left: 107,
+    top: 81,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarContainer: {
+    position: "absolute",
+  },
+  text: {
+    fontSize: 30,
+    color: "#212121",
+    marginBottom: 32,
+    fontSize: 30,
+    textAlign: "center",
+    fontFamily: "Roboto-Medium",
+  },
+  input: {
+    height: 50,
+    padding: 16,
+    backgroundColor: "#F6F6F6",
+    color: "#000000",
+  },
+  inputPass: {
+    height: 50,
+    paddingLeft: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    paddingRight: 95,
+    backgroundColor: "#F6F6F6",
+    color: "#000000",
+    position: "relative",
+  },
+  btn: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FF6C00",
+    height: 50,
+    borderRadius: 100,
+    marginTop: 43,
+  },
+  btnText: {
+    color: "#ffff",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  btnShow: {
+    position: "absolute",
+    right: 15,
+    top: 15,
+  },
+  btnShowText: {
+    color: "#1B4371",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+  btnToLogin: {
+    marginTop: 16,
+    width: 188,
+  },
+  btnTextToLogin: {
+    color: "#1B4371",
+    fontSize: 16,
+    fontFamily: "Roboto-Regular",
+  },
+});

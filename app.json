@@ -3,13 +3,13 @@
     "name": "react_native_project",
     "slug": "react_native_project",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#D5D5D5"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

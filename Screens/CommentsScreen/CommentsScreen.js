@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Platform,
-  KeyboardAvoidingView,
 } from "react-native";
 import { styles } from "./CommentsScreenStyle";
 import { useState, useEffect } from "react";
@@ -30,7 +28,7 @@ export const CommentsScreen = ({ route }) => {
 
   const getComments = async () => {
     await onValue(ref(db, "posts/" + id), (snapshot) => {
-      if (!snapshot.val()) return;
+      if (!snapshot.val()?.coments) return;
 
       setallComments(Object.values(snapshot.val().coments));
     });

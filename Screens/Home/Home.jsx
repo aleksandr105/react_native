@@ -39,7 +39,7 @@ export const Home = ({ navigation }) => {
         data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
-          <View style={{ paddingBottom: 32, paddingTop: index === 0 ? 32 : 0 }}>
+          <View style={{ paddingBottom: 32, paddingTop: index === 0 ? 16 : 0 }}>
             <Image source={{ uri: item.photo }} style={styles.postImage} />
             <Text style={styles.localityText}>{item.nameLocality}</Text>
             <View style={styles.btnWrapper}>

@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingTop: 32,
+    marginBottom: 16,
   },
   stringName: {
     fontSize: 13,

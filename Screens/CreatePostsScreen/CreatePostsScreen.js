@@ -120,7 +120,11 @@ export const CreatePostsScreen = ({ navigation }) => {
         <View style={styles.inputWraper}>
           <TextInput
             placeholder="Местность..."
-            style={{ ...styles.input, paddingLeft: 28 }}
+            style={{
+              ...styles.input,
+              paddingLeft: 28,
+              fontFamily: "Roboto-Regular",
+            }}
             onChangeText={setLocality}
             value={locality}
           />

@@ -58,6 +58,9 @@ export const styles = StyleSheet.create({
     height: 50,
     borderBottomColor: "#BDBDBD",
     borderBottomWidth: 1,
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+    color: "#212121",
   },
   text: {
     marginTop: 8,

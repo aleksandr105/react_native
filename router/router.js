@@ -5,11 +5,11 @@ import {
   LoginScreen,
   PostsScreen,
   CreatePostsScreen,
+  ProfileScreen,
 } from "../Screens";
 
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
 const MainScrenes = createBottomTabNavigator();
@@ -35,34 +35,25 @@ export const router = (auth) => {
 
   return (
     <MainScrenes.Navigator
-      initialRouteName="Публикации"
       screenOptions={{
         tabBarShowLabel: false,
         headerTitleAlign: "center",
       }}
     >
       <MainScrenes.Screen
-        name="Публикации"
+        name="Posts"
         component={PostsScreen}
         options={{
           tabBarIcon: (focused, size, color) => (
             <Feather name="grid" size={24} style={{ color: "#212121" }} />
           ),
-          headerRight: () => (
-            <TouchableOpacity style={{ paddingRight: 10 }}>
-              <MaterialIcons
-                name="logout"
-                size={24}
-                style={{ color: "#BDBDBD" }}
-              />
-            </TouchableOpacity>
-          ),
           tabBarActiveBackgroundColor: "#FF6C00",
           tabBarItemStyle: { borderRadius: 20, width: 70, height: 40 },
+          headerShown: false,
         }}
       />
       <MainScrenes.Screen
-        name="Create"
+        name="Создать публикацию"
         component={CreatePostsScreen}
         options={{
           tabBarIcon: (focused, size, color) => (
@@ -78,13 +69,14 @@ export const router = (auth) => {
       />
       <MainScrenes.Screen
         name="Profile"
-        component={PostsScreen}
+        component={ProfileScreen}
         options={{
           tabBarIcon: (focused, size, color) => (
             <Feather name="user" size={24} style={{ color: "#212121" }} />
           ),
           tabBarActiveBackgroundColor: "#FF6C00",
           tabBarItemStyle: { borderRadius: 20, width: 70, height: 40 },
+          headerShown: false,
         }}
       />
     </MainScrenes.Navigator>

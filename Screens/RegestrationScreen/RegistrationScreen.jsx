@@ -13,11 +13,14 @@ import {
   Image,
 } from "react-native";
 import { styles } from "./stylesRegestration";
+import { useDispatch } from "react-redux";
+import { authSingUpUser } from "../../redux/auth/authOperation";
 
 const initialState = {
   name: "",
   email: "",
   password: "",
+  userPhoto: null,
 };
 
 export const RegistrationScreen = ({ navigation }) => {
@@ -27,6 +30,8 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const [height, setHeight] = useState(Dimensions.get("window").height);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const saveSize = () => {
@@ -45,7 +50,7 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const RegisterSubmit = () => {
     Keyboard.dismiss();
-    console.log(submitData);
+    dispatch(authSingUpUser(submitData));
     setSubmitData(initialState);
   };
 

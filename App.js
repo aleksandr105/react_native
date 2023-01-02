@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { router } from "./router/router";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+import { AppMain } from "./components/AppMain";
+import "react-native-get-random-values";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-
-  const routing = router(true);
 
   useEffect(() => {
     async function prepare() {
@@ -17,6 +17,7 @@ export default function App() {
         await Font.loadAsync({
           "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
           "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+          "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
         });
       } catch (e) {
         console.warn(e);
@@ -37,5 +38,9 @@ export default function App() {
     return null;
   }
   onLayoutRootView();
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <Provider store={store}>
+      <AppMain />
+    </Provider>
+  );
 }

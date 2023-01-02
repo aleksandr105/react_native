@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { styles } from "./stylesLogin";
+import { useDispatch } from "react-redux";
+import { authSingInUser } from "../../redux/auth/authOperation";
 
 const initialState = {
   email: "",
@@ -25,6 +27,8 @@ export const LoginScreen = ({ navigation }) => {
 
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const [height, setHeight] = useState(Dimensions.get("window").height);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const saveSize = () => {
@@ -41,9 +45,9 @@ export const LoginScreen = ({ navigation }) => {
     };
   }, []);
 
-  const RegisterSubmit = () => {
+  const loginSubmit = () => {
     Keyboard.dismiss();
-    console.log(submitData);
+    dispatch(authSingInUser(submitData));
     setSubmitData(initialState);
   };
 
@@ -118,7 +122,7 @@ export const LoginScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.btn}
                 activeOpacity={0.9}
-                onPress={RegisterSubmit}
+                onPress={loginSubmit}
               >
                 <Text style={styles.btnText}>Войти</Text>
               </TouchableOpacity>

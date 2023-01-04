@@ -23,7 +23,6 @@ export const styles = StyleSheet.create({
     height: 25,
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: "#FF6C00",
     backgroundColor: "#FFFFFF",
     position: "absolute",
     left: 107,

@@ -33,6 +33,7 @@ export const PostsScreen = () => {
         }}
       />
       <MainScrenes.Screen name="Локация" component={MapScreen} />
+
       <MainScrenes.Screen name="Комментарии" component={CommentsScreen} />
     </MainScrenes.Navigator>
   );

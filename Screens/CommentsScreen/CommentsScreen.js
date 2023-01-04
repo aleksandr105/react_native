@@ -5,6 +5,11 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { styles } from "./CommentsScreenStyle";
 import { useState, useEffect } from "react";
@@ -44,49 +49,64 @@ export const CommentsScreen = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: photo }} style={styles.image} />
-      <View style={{ justifyContent: "space-between", flex: 1 }}>
-        <FlatList
-          data={allComments}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                ...styles.commentWrapper,
-                marginBottom: allComments.length - 1 === index ? 31 : 26,
-              }}
-            >
-              <View style={styles.userInfoWrapper}>
-                <Image source={{ uri: userPhoto }} style={styles.userImage} />
-                <Text style={styles.userName}>{item.userName}</Text>
-              </View>
-              <View
-                style={{ paddingTop: 20, paddingLeft: 60, paddingRight: 16 }}
-              >
-                <Text style={styles.commentText}>{item.coment}</Text>
-              </View>
-            </View>
-          )}
-        />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        enabled
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.container}>
+          <Image source={{ uri: photo }} style={styles.image} />
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={allComments}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <View
+                  style={{
+                    ...styles.commentWrapper,
+                    marginBottom: allComments.length - 1 === index ? 31 : 26,
+                  }}
+                >
+                  <View style={styles.userInfoWrapper}>
+                    <Image
+                      source={{ uri: userPhoto }}
+                      style={styles.userImage}
+                    />
+                    <Text style={styles.userName}>{item.userName}</Text>
+                  </View>
+                  <View
+                    style={{
+                      paddingTop: 20,
+                      paddingLeft: 60,
+                      paddingRight: 16,
+                    }}
+                  >
+                    <Text style={styles.commentText}>{item.coment}</Text>
+                  </View>
+                </View>
+              )}
+            />
 
-        <View style={{ position: "relative" }}>
-          <TextInput
-            placeholder="Комментировать..."
-            style={styles.input}
-            onChangeText={setComent}
-            value={coment}
-          />
-          <TouchableOpacity
-            style={styles.btn}
-            activeOpacity={0.9}
-            onPress={createComent}
-            disabled={coment.trim() === ""}
-          >
-            <Ionicons name="arrow-up" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
+            <View style={{ position: "relative" }}>
+              <TextInput
+                placeholder="Комментировать..."
+                style={styles.input}
+                onChangeText={setComent}
+                value={coment}
+              />
+              <TouchableOpacity
+                style={styles.btn}
+                activeOpacity={0.9}
+                onPress={createComent}
+                disabled={coment.trim() === ""}
+              >
+                <Ionicons name="arrow-up" size={24} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };

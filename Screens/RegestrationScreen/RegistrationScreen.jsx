@@ -15,6 +15,8 @@ import {
 import { styles } from "./stylesRegestration";
 import { useDispatch } from "react-redux";
 import { authSingUpUser } from "../../redux/auth/authOperation";
+import * as ImagePicker from "expo-image-picker";
+import { AntDesign } from "@expo/vector-icons";
 
 const initialState = {
   name: "",
@@ -27,6 +29,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const [showPass, setShowPass] = useState(true);
   const [focus, setFocus] = useState(null);
   const [submitData, setSubmitData] = useState(initialState);
+  const [userPhoto, setUserPhoto] = useState(null);
 
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const [height, setHeight] = useState(Dimensions.get("window").height);
@@ -49,11 +52,36 @@ export const RegistrationScreen = ({ navigation }) => {
   }, []);
 
   const RegisterSubmit = () => {
+    const { name, email, password } = submitData;
+
+    if (name.trim() === "" && email.trim() === "" && password.trim() === "") {
+      alert("Все поля должны быть заполнены!!!");
+      return;
+    }
     Keyboard.dismiss();
     dispatch(authSingUpUser(submitData));
     setSubmitData(initialState);
   };
 
+  const addUserImage = async () => {
+    if (userPhoto) {
+      setUserPhoto(null);
+      setSubmitData((prev) => ({ ...prev, userPhoto: null }));
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSubmitData((prev) => ({ ...prev, userPhoto: result.assets[0].uri }));
+      setUserPhoto(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View
@@ -78,16 +106,21 @@ export const RegistrationScreen = ({ navigation }) => {
                   top: focus === null ? -60 : -80,
                 }}
               >
-                <Image
-                  source={{ uri: "https://reactjs.org/logo-og.png" }}
-                  style={styles.avatar}
-                />
+                <Image source={{ uri: userPhoto }} style={styles.avatar} />
                 <TouchableOpacity
-                  style={styles.addAvatar}
+                  style={{
+                    ...styles.addAvatar,
+                    borderColor: userPhoto ? "#747272" : "#FF6C00",
+                  }}
                   activeOpacity={0.9}
-                  onPress={() => setShowPass((prev) => !prev)}
+                  onPress={addUserImage}
                 >
-                  <Image source={require("../../assets/Union.png")} />
+                  {!userPhoto && (
+                    <Image source={require("../../assets/Union.png")} />
+                  )}
+                  {userPhoto && (
+                    <AntDesign name="close" size={20} color="#747272" />
+                  )}
                 </TouchableOpacity>
               </View>
               <Text style={styles.text}>Регистрация</Text>

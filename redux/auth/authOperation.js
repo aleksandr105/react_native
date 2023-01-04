@@ -8,9 +8,17 @@ import {
   signOut,
 } from "firebase/auth";
 import { authSlice } from "./authReducer";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
-const { updateUserProfile, authStateChange, authSingOut, refreshing } =
-  authSlice.actions;
+const storage = getStorage();
+
+const {
+  updateUserProfile,
+  authStateChange,
+  authSingOut,
+  refreshing,
+  updateUserPhoto,
+} = authSlice.actions;
 
 const auth = getAuth(app);
 
@@ -30,14 +38,33 @@ const authSingUpUser =
   async (dispatch, getState) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+
+      let photoRef = null;
+      const { uid, displayName } = auth.currentUser;
+
+      if (userPhoto) {
+        const uploadPhotoToServer = async () => {
+          const response = await fetch(userPhoto);
+          const file = await response.blob();
+          const ImagesRef = ref(storage, `userImage/${uid}`);
+          await uploadBytes(ImagesRef, file);
+          const refStorFile = await getDownloadURL(ref(ImagesRef));
+          return refStorFile;
+        };
+        photoRef = await uploadPhotoToServer();
+      }
+
       await updateProfile(auth.currentUser, {
         displayName: name,
-        photoURL: userPhoto,
+        photoURL: photoRef,
       });
-      const { uid, displayName, userPhoto } = auth.currentUser;
 
       dispatch(
-        updateUserProfile({ userId: uid, userName: displayName, userPhoto })
+        updateUserProfile({
+          userId: uid,
+          userName: displayName,
+          photoURL: photoRef,
+        })
       );
     } catch (error) {
       console.log("error", error);
@@ -63,7 +90,7 @@ const authStateChangeUser = () => async (dispatch, getState) => {
           updateUserProfile({
             userId: user.uid,
             userName: user.displayName,
-            userPhoto: user.userPhoto,
+            userPhoto: user.photoURL,
             email: user.email,
           })
         );
@@ -81,4 +108,42 @@ const authStateChangeUser = () => async (dispatch, getState) => {
   }
 };
 
-export { authSingUpUser, authSingInUser, authSingOutUser, authStateChangeUser };
+const updateUserPhotoOperation = (newPhoto) => async (dispatch, getState) => {
+  try {
+    let photoRef = "null";
+    const { uid } = auth.currentUser;
+
+    if (newPhoto) {
+      const uploadPhotoToServer = async () => {
+        const response = await fetch(newPhoto);
+        const file = await response.blob();
+        const ImagesRef = ref(storage, `userImage/${uid}`);
+        await uploadBytes(ImagesRef, file);
+        const refStorFile = await getDownloadURL(ref(ImagesRef));
+        return refStorFile;
+      };
+      photoRef = await uploadPhotoToServer();
+    }
+
+    await updateProfile(auth.currentUser, {
+      photoURL: photoRef,
+    });
+
+    dispatch(
+      updateUserPhoto({
+        photoURL: photoRef,
+      })
+    );
+  } catch (error) {
+    console.log("error", error);
+    console.log("error.message", error.message);
+  }
+};
+
+export {
+  authSingUpUser,
+  authSingInUser,
+  authSingOutUser,
+  authStateChangeUser,
+  updateUserPhotoOperation,
+};

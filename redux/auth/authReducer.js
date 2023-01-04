@@ -21,6 +21,10 @@ export const authSlice = createSlice({
       stateChange: true,
       email: payload.email,
     }),
+    updateUserPhoto: (state, { payload }) => ({
+      ...state,
+      userPhoto: payload.photoURL,
+    }),
     authStateChange: (state, { payload }) => ({
       ...state,
       stateChange: payload.stateChange,

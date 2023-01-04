@@ -13,15 +13,22 @@ import { useSelector } from "react-redux";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import { authSingOutUser } from "../../redux/auth/authOperation";
+import {
+  authSingOutUser,
+  updateUserPhotoOperation,
+} from "../../redux/auth/authOperation";
+import { AntDesign } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 const db = getDatabase();
 
 export const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { userId: userIdCurrent, userName } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    userId: userIdCurrent,
+    userName,
+    userPhoto,
+  } = useSelector((state) => state.auth);
   const [userPosts, setUserPosts] = useState([]);
 
   const [width, setWidth] = useState(Dimensions.get("window").width);
@@ -57,6 +64,24 @@ export const ProfileScreen = ({ navigation }) => {
     });
   };
 
+  const updatePhoto = async () => {
+    if (userPhoto === "null") {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        dispatch(updateUserPhotoOperation(result.assets[0].uri));
+      } else {
+        alert("You did not select any image.");
+      }
+      return;
+    }
+
+    dispatch(updateUserPhotoOperation(null));
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -79,18 +104,21 @@ export const ProfileScreen = ({ navigation }) => {
               top: -60,
             }}
           >
-            <Image
-              source={{ uri: "https://reactjs.org/logo-og.png" }}
-              style={styles.avatar}
-            />
+            <Image source={{ uri: userPhoto }} style={styles.avatar} />
             <TouchableOpacity
-              style={styles.addAvatar}
-              activeOpacity={0.9}
-              onPress={() => {
-                console.log("click");
+              style={{
+                ...styles.addAvatar,
+                borderColor: userPhoto !== "null" ? "#747272" : "#FF6C00",
               }}
+              activeOpacity={0.9}
+              onPress={updatePhoto}
             >
-              <Image source={require("../../assets/Union.png")} />
+              {userPhoto !== "null" && (
+                <AntDesign name="close" size={20} color="#747272" />
+              )}
+              {userPhoto === "null" && (
+                <Image source={require("../../assets/Union.png")} />
+              )}
             </TouchableOpacity>
           </View>
           <Text style={styles.text}>{userName}</Text>

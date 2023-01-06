@@ -48,7 +48,6 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const takePhoto = async () => {
     const { uri } = await refPhoto.takePictureAsync();
-    console.log(uri);
     const location = await Location.getCurrentPositionAsync();
     setPhoto(uri);
     setLocation(location);

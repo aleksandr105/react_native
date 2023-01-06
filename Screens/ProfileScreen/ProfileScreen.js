@@ -108,15 +108,18 @@ export const ProfileScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 ...styles.addAvatar,
-                borderColor: userPhoto !== "null" ? "#747272" : "#FF6C00",
+                borderColor:
+                  userPhoto !== "null" && userPhoto !== null
+                    ? "#747272"
+                    : "#FF6C00",
               }}
               activeOpacity={0.9}
               onPress={updatePhoto}
             >
-              {userPhoto !== "null" && (
+              {userPhoto !== "null" && userPhoto !== null && (
                 <AntDesign name="close" size={20} color="#747272" />
               )}
-              {userPhoto === "null" && (
+              {(userPhoto === "null" || userPhoto === null) && (
                 <Image source={require("../../assets/Union.png")} />
               )}
             </TouchableOpacity>

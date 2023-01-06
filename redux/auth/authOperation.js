@@ -9,6 +9,9 @@ import {
 } from "firebase/auth";
 import { authSlice } from "./authReducer";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { getDatabase, ref as to, set } from "firebase/database";
+
+const db = getDatabase();
 
 const storage = getStorage();
 
@@ -30,6 +33,20 @@ const authSingInUser =
     } catch (error) {
       console.log("error", error);
       console.log("error.message", error.message);
+      if (error.message === "Firebase: Error (auth/invalid-email).") {
+        alert("Не верный формат email!!!");
+        return;
+      }
+      if (error.message === "Firebase: Error (auth/user-not-found).") {
+        alert("Такого пользователя не существует!!!");
+        return;
+      }
+      if (error.message === "Firebase: Error (auth/wrong-password).") {
+        alert("Неправильний пароль!!!");
+        return;
+      }
+
+      alert(error.message);
     }
   };
 
@@ -40,7 +57,7 @@ const authSingUpUser =
       await createUserWithEmailAndPassword(auth, email, password);
 
       let photoRef = null;
-      const { uid, displayName } = auth.currentUser;
+      const { uid } = auth.currentUser;
 
       if (userPhoto) {
         const uploadPhotoToServer = async () => {
@@ -59,16 +76,31 @@ const authSingUpUser =
         photoURL: photoRef,
       });
 
+      set(to(db, "avatars/" + uid), { userPhoto: photoRef });
+
       dispatch(
         updateUserProfile({
           userId: uid,
-          userName: displayName,
-          photoURL: photoRef,
+          userName: name,
+          userPhoto: photoRef,
+          email: email,
         })
       );
     } catch (error) {
       console.log("error", error);
       console.log("error.message", error.message);
+      if (error.message === "Firebase: Error (auth/invalid-email).") {
+        alert("Не верный формат email!!!");
+        return;
+      }
+      if (
+        error.message ===
+        "Firebase: Password should be at least 6 characters (auth/weak-password)."
+      ) {
+        alert("Пароль должен быть не менее 6 символов");
+        return;
+      }
+      alert(error.message);
     }
   };
 
@@ -84,6 +116,7 @@ const authSingOutUser = () => async (dispatch, getState) => {
 
 const authStateChangeUser = () => async (dispatch, getState) => {
   try {
+    dispatch(refreshing({ loading: true }));
     await onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(
@@ -98,12 +131,13 @@ const authStateChangeUser = () => async (dispatch, getState) => {
         dispatch(refreshing({ loading: false }));
       } else {
         dispatch(refreshing({ loading: false }));
-        console.log("!user");
+        console.log("юзер не зарегестрирован");
       }
     });
   } catch (error) {
     console.log("error", error);
     console.log("error.message", error.message);
+    alert(error.message);
     dispatch(refreshing({ loading: false }));
   }
 };
@@ -134,6 +168,8 @@ const updateUserPhotoOperation = (newPhoto) => async (dispatch, getState) => {
         photoURL: photoRef,
       })
     );
+
+    set(to(db, "avatars/" + uid), { userPhoto: photoRef });
   } catch (error) {
     console.log("error", error);
     console.log("error.message", error.message);

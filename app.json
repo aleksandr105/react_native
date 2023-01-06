@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "react_native_project",
+    "name": "Best locations book",
     "slug": "react_native_project",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,12 +22,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.oleksandr105.react_native_project"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "696cefb0-10a5-4bfa-96b6-a1e97ed3270e"
+      }
     }
   }
 }

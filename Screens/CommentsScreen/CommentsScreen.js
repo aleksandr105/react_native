@@ -9,7 +9,6 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Platform,
-  ScrollView,
 } from "react-native";
 import { styles } from "./CommentsScreenStyle";
 import { useState, useEffect } from "react";
@@ -17,13 +16,43 @@ import { useSelector } from "react-redux";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 import { Ionicons } from "@expo/vector-icons";
+import dateFormat, { masks, i18n } from "dateformat";
 
 const db = getDatabase();
+
+i18n.monthNames = [
+  "янв",
+  "фев",
+  "мар",
+  "апр",
+  "май",
+  "июнь",
+  "июль",
+  "авг",
+  "сен",
+  "окт",
+  "ноя",
+  "дек",
+  "январь",
+  "февраль",
+  "март",
+  "апрель",
+  "май",
+  "июнь",
+  "июль",
+  "август",
+  "сентябырь",
+  "октябырь",
+  "ноябырь",
+  "декабырь",
+];
 
 export const CommentsScreen = ({ route }) => {
   const [coment, setComent] = useState("");
   const { userName, userId, userPhoto } = useSelector((state) => state.auth);
   const [allComments, setallComments] = useState([]);
+  const [allrefsPhoto, setAllrefsPhoto] = useState(null);
+  const [allCommentsWithPhoto, setAllCommentsWithPhoto] = useState([]);
 
   const { id, photo } = route.params;
 
@@ -31,7 +60,35 @@ export const CommentsScreen = ({ route }) => {
     getComments();
   }, []);
 
+  useEffect(() => {
+    if (allrefsPhoto && allComments !== []) {
+      masks.hammerTime = 'dd mmmm, yyyy "|" HH:MM ';
+
+      const updatedArr = allComments
+        .sort((elA, elB) => elB.comentTime - elA.comentTime)
+        .map((el) => {
+          if (allrefsPhoto[el.userId]) {
+            return {
+              ...el,
+              ...allrefsPhoto[el.userId],
+              comentTime: dateFormat(el.comentTime, "hammerTime"),
+            };
+          }
+
+          return { ...el, comentTime: dateFormat(el.comentTime, "hammerTime") };
+        });
+
+      setAllCommentsWithPhoto(updatedArr);
+    }
+  }, [allrefsPhoto, allComments]);
+
   const getComments = async () => {
+    await onValue(ref(db, "avatars/"), (snapshot) => {
+      if (!snapshot.val()) return;
+
+      setAllrefsPhoto(snapshot.val());
+    });
+
     await onValue(ref(db, "posts/" + id), (snapshot) => {
       if (!snapshot.val()?.coments) return;
 
@@ -44,7 +101,9 @@ export const CommentsScreen = ({ route }) => {
       userId,
       coment,
       userName,
+      comentTime: Date.now(),
     });
+
     setComent("");
   };
 
@@ -59,7 +118,7 @@ export const CommentsScreen = ({ route }) => {
           <Image source={{ uri: photo }} style={styles.image} />
           <View style={{ flex: 1 }}>
             <FlatList
-              data={allComments}
+              data={allCommentsWithPhoto}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => (
                 <View
@@ -70,7 +129,7 @@ export const CommentsScreen = ({ route }) => {
                 >
                   <View style={styles.userInfoWrapper}>
                     <Image
-                      source={{ uri: userPhoto }}
+                      source={{ uri: item.userPhoto }}
                       style={styles.userImage}
                     />
                     <Text style={styles.userName}>{item.userName}</Text>
@@ -80,9 +139,11 @@ export const CommentsScreen = ({ route }) => {
                       paddingTop: 20,
                       paddingLeft: 60,
                       paddingRight: 16,
+                      flex: 1,
                     }}
                   >
                     <Text style={styles.commentText}>{item.coment}</Text>
+                    <Text style={styles.timeText}>{item.comentTime}</Text>
                   </View>
                 </View>
               )}

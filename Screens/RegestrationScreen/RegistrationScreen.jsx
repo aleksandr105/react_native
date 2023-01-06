@@ -54,7 +54,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const RegisterSubmit = () => {
     const { name, email, password } = submitData;
 
-    if (name.trim() === "" && email.trim() === "" && password.trim() === "") {
+    if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
       alert("Все поля должны быть заполнены!!!");
       return;
     }
@@ -79,7 +79,7 @@ export const RegistrationScreen = ({ navigation }) => {
       setSubmitData((prev) => ({ ...prev, userPhoto: result.assets[0].uri }));
       setUserPhoto(result.assets[0].uri);
     } else {
-      alert("You did not select any image.");
+      alert("Ты не выбрал фото.");
     }
   };
   return (

@@ -60,4 +60,11 @@ export const styles = StyleSheet.create({
     top: 0,
     left: 60,
   },
+  timeText: {
+    marginTop: 3,
+    fontSize: 10,
+    color: "#BDBDBD",
+    fontFamily: "Roboto-Regular",
+    marginLeft: "auto",
+  },
 });

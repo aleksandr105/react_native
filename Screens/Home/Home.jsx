@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
+import dateFormat, { masks } from "dateformat";
 
 const db = getDatabase();
-console.log("object");
 
 export const Home = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
@@ -18,8 +18,23 @@ export const Home = ({ navigation }) => {
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
 
-      if (data)
-        setPosts(Object.keys(data).map((el) => ({ ...data[el], id: el })));
+      if (data) {
+        masks.hammerTime = 'dd mmmm, yyyy "|" HH:MM ';
+
+        const allPosts = Object.keys(data).map((el) => ({
+          ...data[el],
+          id: el,
+        }));
+
+        const allPostsRender = allPosts
+          .sort((a, b) => b.createTime - a.createTime)
+          .map((el) => ({
+            ...el,
+            createTime: dateFormat(el.createTime, "hammerTime"),
+          }));
+
+        setPosts(allPostsRender);
+      }
     });
   };
 
@@ -42,7 +57,10 @@ export const Home = ({ navigation }) => {
         renderItem={({ item, index }) => (
           <View style={{ paddingBottom: 32, paddingTop: index === 0 ? 16 : 0 }}>
             <Image source={{ uri: item.photo }} style={styles.postImage} />
-            <Text style={styles.localityText}>{item.nameLocality}</Text>
+            <View style={styles.timeContainer}>
+              <Text style={styles.localityText}>{item.nameLocality}</Text>
+              <Text style={styles.timeText}>{item.createTime}</Text>
+            </View>
             <View style={styles.btnWrapper}>
               <TouchableOpacity
                 style={{ flexDirection: "row" }}

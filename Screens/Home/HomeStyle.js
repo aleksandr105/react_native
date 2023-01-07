@@ -34,8 +34,6 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
   },
   localityText: {
-    marginBottom: 8,
-    marginTop: 8,
     color: "#212121",
     fontSize: 16,
     fontFamily: "Roboto-Medium",
@@ -43,5 +41,16 @@ export const styles = StyleSheet.create({
   btnWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  timeContainer: {
+    marginBottom: 5,
+    marginTop: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  timeText: {
+    fontSize: 10,
+    color: "#BDBDBD",
+    fontFamily: "Roboto-Regular",
   },
 });

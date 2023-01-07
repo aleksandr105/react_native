@@ -19,6 +19,7 @@ import {
 } from "../../redux/auth/authOperation";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import dateFormat, { masks } from "dateformat";
 
 const db = getDatabase();
 
@@ -56,11 +57,20 @@ export const ProfileScreen = ({ navigation }) => {
       if (!snapshot.val()) return;
 
       const allPosts = snapshot.val();
+      masks.hammerTime = 'dd mmmm, yyyy "|" HH:MM ';
 
       const allUserPosts = Object.keys(snapshot.val())
         .map((el) => ({ ...allPosts[el], id: el }))
         .filter((el) => el.userId === userIdCurrent);
-      setUserPosts(allUserPosts);
+
+      const allUserPostsRender = allUserPosts
+        .sort((a, b) => b.createTime - a.createTime)
+        .map((el) => ({
+          ...el,
+          createTime: dateFormat(el.createTime, "hammerTime"),
+        }));
+
+      setUserPosts(allUserPostsRender);
     });
   };
 
@@ -134,7 +144,10 @@ export const ProfileScreen = ({ navigation }) => {
                 style={{ paddingBottom: 32, paddingTop: index === 0 ? 32 : 0 }}
               >
                 <Image source={{ uri: item.photo }} style={styles.postImage} />
-                <Text style={styles.localityText}>{item.nameLocality}</Text>
+                <View style={styles.timeContainer}>
+                  <Text style={styles.localityText}>{item.nameLocality}</Text>
+                  <Text style={styles.timeText}>{item.createTime}</Text>
+                </View>
                 <View style={styles.btnWrapper}>
                   <TouchableOpacity
                     style={{ flexDirection: "row" }}

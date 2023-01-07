@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
 
 const db = getDatabase();
+console.log("object");
 
 export const Home = ({ navigation }) => {
   const [posts, setPosts] = useState([]);

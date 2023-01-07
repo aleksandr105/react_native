@@ -72,6 +72,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       location: location.coords,
       userName,
       userId,
+      createTime: Date.now(),
     });
   };
 

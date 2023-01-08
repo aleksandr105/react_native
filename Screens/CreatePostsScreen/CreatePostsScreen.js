@@ -9,6 +9,7 @@ import {
   Keyboard,
   Platform,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { styles } from "./CreatePostsScreenStyle";
 import { Camera, CameraType } from "expo-camera";
@@ -31,6 +32,8 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [type, setType] = useState(CameraType.back);
   const [locality, setLocality] = useState("");
   const [nameLocality, setNameLocality] = useState("");
+  const [playCamera, setPlayCamera] = useState(false);
+  const [width, setWidth] = useState(Dimensions.get("window").width);
 
   const { userId, userName } = useSelector((state) => state.auth);
 
@@ -44,6 +47,17 @@ export const CreatePostsScreen = ({ navigation }) => {
 
       let { status } = await Location.requestForegroundPermissionsAsync();
     })();
+
+    const saveSize = () => {
+      const sizeWith = Math.round(Dimensions.get("window").width);
+      setWidth(sizeWith);
+    };
+
+    const event = Dimensions.addEventListener("change", saveSize);
+
+    return () => {
+      event.remove();
+    };
   }, []);
 
   const takePhoto = async () => {
@@ -51,6 +65,9 @@ export const CreatePostsScreen = ({ navigation }) => {
     const location = await Location.getCurrentPositionAsync();
     setPhoto(uri);
     setLocation(location);
+    setPlayCamera(false);
+    console.log(playCamera);
+    console.log(photo);
   };
 
   const sendPhoto = () => {
@@ -100,100 +117,107 @@ export const CreatePostsScreen = ({ navigation }) => {
         enabled
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView style={styles.container}>
-          <View style={styles.cameraWrapper}>
-            {photo ? (
-              <Image source={{ uri: photo }} style={styles.camera} />
-            ) : (
-              <Camera style={styles.camera} ref={setRefPhoto} type={type}>
-                <TouchableOpacity style={styles.btnCamera} onPress={takePhoto}>
-                  <MaterialIcons
-                    name="photo-camera"
-                    size={24}
-                    color="#FFFFFF"
-                  />
-                </TouchableOpacity>
+        {!playCamera && (
+          <ScrollView style={styles.container}>
+            <View style={styles.cameraWrapper}>
+              <View style={{ ...styles.btnContainer, left: width / 2 - 45 }}>
                 <TouchableOpacity
-                  style={styles.buttonType}
-                  onPress={() => {
-                    setType(
-                      type === CameraType.back
-                        ? CameraType.front
-                        : CameraType.back
-                    );
-                  }}
+                  style={styles.btnCamera}
+                  onPress={() => (!photo ? setPlayCamera(true) : clearData())}
                 >
-                  <Ionicons
-                    name="camera-reverse-sharp"
-                    size={24}
-                    color="#FFFFFF"
-                  />
+                  {!photo && (
+                    <MaterialIcons
+                      name="photo-camera"
+                      size={24}
+                      color="#FFFFFF"
+                    />
+                  )}
+                  {photo && <Feather name="trash-2" size={24} color="red" />}
                 </TouchableOpacity>
-              </Camera>
-            )}
-          </View>
+              </View>
 
-          <Text style={styles.text}>
-            {!photo ? "Сделайте фото" : "Редактировать фото"}
-          </Text>
-
-          <View style={{ justifyContent: "flex-end" }}>
-            <View style={styles.inputWraper}>
-              <TextInput
-                placeholder="Название..."
-                style={styles.input}
-                onChangeText={setNameLocality}
-                value={nameLocality}
-              />
+              {photo && <Image source={{ uri: photo }} style={styles.camera} />}
             </View>
-            <View style={styles.inputWraper}>
-              <TextInput
-                placeholder="Местность..."
-                style={{
-                  ...styles.input,
-                  paddingLeft: 28,
-                  fontFamily: "Roboto-Regular",
-                }}
-                onChangeText={setLocality}
-                value={locality}
-              />
-              <Feather
-                name="map-pin"
-                size={24}
-                color="#BDBDBD"
-                style={styles.iconLocal}
-              />
-            </View>
-          </View>
 
-          <TouchableOpacity
-            disabled={!DataIsReady}
-            style={{
-              ...styles.btn,
-              backgroundColor: DataIsReady ? "#FF6C00" : "#F6F6F6",
-            }}
-            activeOpacity={0.9}
-            onPress={sendPhoto}
-          >
-            <Text
+            <Text style={styles.text}>
+              {!photo ? "Сделайте фото" : "Удалить фото"}
+            </Text>
+
+            <View style={{ justifyContent: "flex-end" }}>
+              <View style={styles.inputWraper}>
+                <TextInput
+                  placeholder="Название..."
+                  style={styles.input}
+                  onChangeText={setNameLocality}
+                  value={nameLocality}
+                />
+              </View>
+              <View style={styles.inputWraper}>
+                <TextInput
+                  placeholder="Местность..."
+                  style={{
+                    ...styles.input,
+                    paddingLeft: 28,
+                    fontFamily: "Roboto-Regular",
+                  }}
+                  onChangeText={setLocality}
+                  value={locality}
+                />
+                <Feather
+                  name="map-pin"
+                  size={24}
+                  color="#BDBDBD"
+                  style={styles.iconLocal}
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              disabled={!DataIsReady}
               style={{
-                ...styles.btnText,
-                color: DataIsReady ? "#ffff" : "#BDBDBD",
+                ...styles.btn,
+                backgroundColor: DataIsReady ? "#FF6C00" : "#F6F6F6",
+              }}
+              activeOpacity={0.9}
+              onPress={sendPhoto}
+            >
+              <Text
+                style={{
+                  ...styles.btnText,
+                  color: DataIsReady ? "#ffff" : "#BDBDBD",
+                }}
+              >
+                Опубликовать
+              </Text>
+            </TouchableOpacity>
+            <View style={{ marginTop: 35, alignItems: "center" }}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.btnDelete}
+                onPress={clearData}
+              >
+                <Feather name="trash-2" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        )}
+        {playCamera && (
+          <Camera style={styles.camera} ref={setRefPhoto} type={type}>
+            <TouchableOpacity style={styles.btnCamera} onPress={takePhoto}>
+              <MaterialIcons name="photo-camera" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonType}
+              onPress={() => {
+                setType(
+                  type === CameraType.back ? CameraType.front : CameraType.back
+                );
               }}
             >
-              Опубликовать
-            </Text>
-          </TouchableOpacity>
-          <View style={{ marginTop: 35, alignItems: "center" }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.btnDelete}
-              onPress={clearData}
-            >
-              <Feather name="trash-2" size={24} color="#BDBDBD" />
+              <Ionicons name="camera-reverse-sharp" size={24} color="#FFFFFF" />
             </TouchableOpacity>
-          </View>
-        </ScrollView>
+          </Camera>
+        )}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 32,
+    paddingTop: 20,
     backgroundColor: "#FFFFFF",
   },
   cameraWrapper: {
@@ -12,13 +12,17 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: "#E8E8E8",
     overflow: "hidden",
+    height: 240,
+    backgroundColor: "#E8E8E8",
+    position: "relative",
   },
   camera: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 240,
+    flex: 1,
     position: "relative",
     backgroundColor: "#F6F6F6",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingBottom: 35,
   },
   btnCamera: {
     width: 60,
@@ -27,6 +31,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "#A3A3A3",
     alignItems: "center",
     justifyContent: "center",
+  },
+  btnContainer: {
+    position: "absolute",
+    zIndex: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    top: 90,
   },
   btn: {
     alignItems: "center",

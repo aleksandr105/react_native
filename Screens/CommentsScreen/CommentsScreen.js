@@ -97,6 +97,7 @@ export const CommentsScreen = ({ route }) => {
   };
 
   const createComent = async () => {
+    Keyboard.dismiss();
     set(ref(db, "posts/" + id + "/coments/" + uuidv4()), {
       userId,
       coment,
@@ -113,59 +114,56 @@ export const CommentsScreen = ({ route }) => {
         style={{ flex: 1 }}
         enabled
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={150}
       >
         <View style={styles.container}>
           <Image source={{ uri: photo }} style={styles.image} />
-          <View style={{ flex: 1 }}>
-            <FlatList
-              data={allCommentsWithPhoto}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <View
-                  style={{
-                    ...styles.commentWrapper,
-                    marginBottom: allComments.length - 1 === index ? 31 : 26,
-                  }}
-                >
-                  <View style={styles.userInfoWrapper}>
-                    <Image
-                      source={{ uri: item.userPhoto }}
-                      style={styles.userImage}
-                    />
-                    <Text style={styles.userName}>{item.userName}</Text>
-                  </View>
-                  <View
-                    style={{
-                      paddingTop: 20,
-                      paddingLeft: 60,
-                      paddingRight: 16,
-                      flex: 1,
-                    }}
-                  >
-                    <Text style={styles.commentText}>{item.coment}</Text>
-                    <Text style={styles.timeText}>{item.comentTime}</Text>
-                  </View>
-                </View>
-              )}
-            />
-
-            <View style={{ position: "relative" }}>
-              <TextInput
-                placeholder="Комментировать..."
-                style={styles.input}
-                onChangeText={setComent}
-                value={coment}
-              />
-              <TouchableOpacity
-                style={styles.btn}
-                activeOpacity={0.9}
-                onPress={createComent}
-                disabled={coment.trim() === ""}
+          <FlatList
+            initialNumToRender={5}
+            contentContainerStyle={{ flexGrow: 1 }}
+            data={allCommentsWithPhoto}
+            keyExtractor={(item, index) => uuidv4()}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  ...styles.commentWrapper,
+                  marginBottom: allComments.length - 1 === index ? 31 : 26,
+                }}
               >
-                <Ionicons name="arrow-up" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-            </View>
-          </View>
+                <Image
+                  source={{ uri: item.userPhoto }}
+                  style={styles.userImage}
+                />
+
+                <View style={{ flex: 1, paddingRight: 16 }}>
+                  <Text style={styles.userName}>{item.userName}</Text>
+                  <Text style={styles.commentText}>{item.coment}</Text>
+                  <Text style={styles.timeText}>{item.comentTime}</Text>
+                </View>
+              </View>
+            )}
+          />
+        </View>
+        <View
+          style={{
+            position: "relative",
+            marginHorizontal: 15,
+          }}
+        >
+          <TextInput
+            placeholder="Комментировать..."
+            style={styles.input}
+            onChangeText={setComent}
+            value={coment}
+          />
+          <TouchableOpacity
+            style={styles.btn}
+            activeOpacity={0.9}
+            onPress={createComent}
+            disabled={coment.trim() === ""}
+          >
+            <Ionicons name="arrow-up" size={24} color="#FFFFFF" />
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

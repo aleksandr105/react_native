@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     width: 34,
     borderRadius: 50,
     position: "absolute",
-    right: 25,
+    right: 10,
     top: 8,
   },
   input: {
@@ -23,6 +23,8 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 100,
     paddingLeft: 20,
+    paddingRight: 55,
+    backgroundColor: "#FFF",
   },
   image: {
     height: 240,
@@ -34,18 +36,10 @@ export const styles = StyleSheet.create({
     width: 28,
     height: 28,
     backgroundColor: "silver",
-    marginRight: 8,
+    marginRight: 16,
   },
   commentWrapper: {
     flexDirection: "row",
-    position: "relative",
-  },
-  userInfoWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    position: "absolute",
-    top: 0,
-    left: 0,
   },
   commentText: {
     fontFamily: "Roboto-Regular",
@@ -56,15 +50,12 @@ export const styles = StyleSheet.create({
     color: "#212121",
     fontSize: 16,
     fontFamily: "Roboto-Medium",
-    position: "absolute",
-    top: 0,
-    left: 60,
   },
   timeText: {
     marginTop: 3,
     fontSize: 10,
     color: "#BDBDBD",
     fontFamily: "Roboto-Regular",
-    marginLeft: "auto",
+    textAlign: "right",
   },
 });

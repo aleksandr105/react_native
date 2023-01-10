@@ -21,6 +21,7 @@ import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { getDatabase, set, ref as refDatabase } from "firebase/database";
 import { app } from "../../firebase/config";
 import { v4 as uuidv4 } from "uuid";
+import { useIsFocused } from "@react-navigation/native";
 
 const storage = getStorage();
 const database = getDatabase(app);
@@ -35,7 +36,11 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [playCamera, setPlayCamera] = useState(false);
   const [width, setWidth] = useState(Dimensions.get("window").width);
 
+  const isFocused = useIsFocused();
+
   const { userId, userName } = useSelector((state) => state.auth);
+
+  useEffect(() => setPlayCamera(false), [isFocused]);
 
   const DataIsReady =
     photo && nameLocality.trim() !== "" && locality.trim() !== "";
@@ -190,7 +195,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                 Опубликовать
               </Text>
             </TouchableOpacity>
-            <View style={{ marginTop: 35, alignItems: "center" }}>
+            <View style={{ alignItems: "center", marginTop: "5%" }}>
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btnDelete}

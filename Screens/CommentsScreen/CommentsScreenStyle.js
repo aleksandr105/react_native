@@ -31,31 +31,4 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 32,
   },
-  userImage: {
-    borderRadius: 50,
-    width: 28,
-    height: 28,
-    backgroundColor: "silver",
-    marginRight: 16,
-  },
-  commentWrapper: {
-    flexDirection: "row",
-  },
-  commentText: {
-    fontFamily: "Roboto-Regular",
-    color: "#212121",
-    fontSize: 13,
-  },
-  userName: {
-    color: "#212121",
-    fontSize: 16,
-    fontFamily: "Roboto-Medium",
-  },
-  timeText: {
-    marginTop: 3,
-    fontSize: 10,
-    color: "#BDBDBD",
-    fontFamily: "Roboto-Regular",
-    textAlign: "right",
-  },
 });

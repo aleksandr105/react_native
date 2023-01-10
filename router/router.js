@@ -1,22 +1,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   RegistrationScreen,
   LoginScreen,
   PostsScreen,
-  CreatePostsScreen,
-  ProfileScreen,
+  MapScreen,
+  CommentsScreen,
 } from "../Screens";
 
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
-
-const MainScrenes = createBottomTabNavigator();
 const AuthScrenes = createStackNavigator();
+const MainScrenes = createStackNavigator();
 
-export const router = (auth) => {
-  if (!auth) {
+export const Router = ({ stateChange }) => {
+  if (!stateChange) {
     return (
       <AuthScrenes.Navigator>
         <AuthScrenes.Screen
@@ -36,49 +31,19 @@ export const router = (auth) => {
   return (
     <MainScrenes.Navigator
       screenOptions={{
-        tabBarShowLabel: false,
         headerTitleAlign: "center",
+        headerStyle: { borderBottomColor: "#BDBDBD", borderBottomWidth: 1 },
       }}
     >
       <MainScrenes.Screen
         name="Posts"
         component={PostsScreen}
-        options={{
-          tabBarIcon: (focused, size, color) => (
-            <Feather name="grid" size={24} style={{ color: "#212121" }} />
-          ),
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarItemStyle: { borderRadius: 20, width: 70, height: 40 },
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
-      <MainScrenes.Screen
-        name="Создать публикацию"
-        component={CreatePostsScreen}
-        options={{
-          tabBarIcon: (focused, size, color) => (
-            <AntDesign
-              name="plus"
-              size={24}
-              style={{ width: 24, height: 24, color: "#212121" }}
-            />
-          ),
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarItemStyle: { borderRadius: 20, width: 70, height: 40 },
-        }}
-      />
-      <MainScrenes.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: (focused, size, color) => (
-            <Feather name="user" size={24} style={{ color: "#212121" }} />
-          ),
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarItemStyle: { borderRadius: 20, width: 70, height: 40 },
-          headerShown: false,
-        }}
-      />
+
+      <MainScrenes.Screen name="Локация" component={MapScreen} />
+
+      <MainScrenes.Screen name="Комментарии" component={CommentsScreen} />
     </MainScrenes.Navigator>
   );
 };

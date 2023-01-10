@@ -14,7 +14,7 @@ import {
 import { styles } from "./CreatePostsScreenStyle";
 import { Camera, CameraType } from "expo-camera";
 import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as Location from "expo-location";
 import { useSelector } from "react-redux";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
@@ -35,6 +35,10 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [nameLocality, setNameLocality] = useState("");
   const [playCamera, setPlayCamera] = useState(false);
   const [width, setWidth] = useState(Dimensions.get("window").width);
+  const [refscroll, setRefscroll] = useState(null);
+  const [keyboardStatus, setKeyboardStatus] = useState(null);
+
+  const refScrollView = useRef();
 
   const isFocused = useIsFocused();
 
@@ -46,6 +50,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     photo && nameLocality.trim() !== "" && locality.trim() !== "";
 
   useEffect(() => {
+    setRefscroll(refScrollView.current);
     (async () => {
       const { status: statusCamera } =
         await Camera.requestCameraPermissionsAsync();
@@ -60,10 +65,21 @@ export const CreatePostsScreen = ({ navigation }) => {
 
     const event = Dimensions.addEventListener("change", saveSize);
 
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    });
+
     return () => {
       event.remove();
+      showSubscription.remove();
+      hideSubscription.remove();
     };
   }, []);
+
+  if (keyboardStatus) refscroll?.scrollToEnd();
 
   const takePhoto = async () => {
     const { uri } = await refPhoto.takePictureAsync();
@@ -123,7 +139,7 @@ export const CreatePostsScreen = ({ navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {!playCamera && (
-          <ScrollView style={styles.container}>
+          <ScrollView style={styles.container} ref={refScrollView}>
             <View style={styles.cameraWrapper}>
               <View style={{ ...styles.btnContainer, left: width / 2 - 45 }}>
                 <TouchableOpacity

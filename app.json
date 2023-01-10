@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Best locations book",
+    "name": "Best locations",
     "slug": "react_native_project",
-    "version": "1.0.1",
+    "version": "1.0.5",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

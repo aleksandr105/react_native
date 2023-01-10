@@ -1,6 +1,6 @@
-import { styles } from "./PostsScreenStyle";
 import { Home } from "../Home";
-import { CreatePostsScreen, ProfileScreen } from "../index";
+import { CreatePostsScreen } from "../CreatePostsScreen";
+import { ProfileScreen } from "../ProfileScreen";
 import { Feather } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
